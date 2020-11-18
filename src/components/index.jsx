@@ -597,7 +597,7 @@ class MaterialUiPhoneNumber extends React.Component {
     } = this.state;
 
     const {
-      classes, dropdownClass, localization, disableDropdown, native,
+      classes, dropdownClass, localization, disableDropdown, native, PopperProps
     } = this.props;
     const inputFlagClasses = `flag ${selectedCountry.iso2}`;
 
@@ -667,9 +667,11 @@ class MaterialUiPhoneNumber extends React.Component {
 
                 <Popper
                   className={dropdownClass}
+                  placement='bottom-start'
                   id="country-menu"
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
+                  {...PopperProps}
                 >
                   <Paper className={classes.paper}>
                     <ClickAwayListener
@@ -811,6 +813,8 @@ MaterialUiPhoneNumber.propTypes = {
   isModernBrowser: PropTypes.func,
   onEnterKeyPress: PropTypes.func,
   keys: PropTypes.object,
+
+  PopperProps: PropTypes.object,
 };
 
 MaterialUiPhoneNumber.defaultProps = {
