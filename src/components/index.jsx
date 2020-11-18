@@ -4,7 +4,10 @@ import clsx from 'clsx';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
+import Popper from '@material-ui/core/Popper';
+import Paper from '@material-ui/core/Paper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import MenuList from '@material-ui/core/MenuList';
 import Divider from '@material-ui/core/Divider';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -39,6 +42,10 @@ const styles = () => ({
     padding: 0,
     lineHeight: 0,
     height: 11,
+  },
+  paper: {
+    height: 284,
+    overflow: 'auto',
   },
   positionStart: {
     position: 'relative',
@@ -658,45 +665,56 @@ class MaterialUiPhoneNumber extends React.Component {
                   <div className={inputFlagClasses} />
                 </Button>
 
-                <Menu
+                <Popper
                   className={dropdownClass}
                   id="country-menu"
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
-                  onClose={() => this.setState({ anchorEl: null })}
                 >
-                  {!!preferredCountries.length && map(preferredCountries, (country, index) => (
-                    <Item
-                      key={`preferred_${country.iso2}_${index}`}
-                      itemRef={(node) => {
-                        this.flags[`flag_no_${index}`] = node;
-                      }}
-                      selected={isSelected(country)}
-                      onClick={() => this.handleFlagItemClick(country)}
-                      name={country.name}
-                      iso2={country.iso2}
-                      dialCode={country.dialCode}
-                      localization={localization && localization[country.name]}
-                    />
-                  ))}
+                  <Paper className={classes.paper}>
+                    <ClickAwayListener
+                      onClickAway={(event) => {
+                        if (anchorEl && anchorEl.contains(event.target)) {
+                          return;
+                        }
+                        this.setState({ anchorEl: null });
+                      }}>
+                      <MenuList>
+                        {!!preferredCountries.length && map(preferredCountries, (country, index) => (
+                          <Item
+                            key={`preferred_${country.iso2}_${index}`}
+                            itemRef={(node) => {
+                              this.flags[`flag_no_${index}`] = node;
+                            }}
+                            selected={isSelected(country)}
+                            onClick={() => this.handleFlagItemClick(country)}
+                            name={country.name}
+                            iso2={country.iso2}
+                            dialCode={country.dialCode}
+                            localization={localization && localization[country.name]}
+                          />
+                        ))}
 
-                  {!!preferredCountries.length && <Divider />}
+                        {!!preferredCountries.length && <Divider />}
 
-                  {map(onlyCountries, (country, index) => (
-                    <Item
-                      key={`preferred_${country.iso2}_${index}`}
-                      itemRef={(node) => {
-                        this.flags[`flag_no_${index}`] = node;
-                      }}
-                      selected={isSelected(country)}
-                      onClick={() => this.handleFlagItemClick(country)}
-                      name={country.name}
-                      iso2={country.iso2}
-                      dialCode={country.dialCode}
-                      localization={localization && localization[country.name]}
-                    />
-                  ))}
-                </Menu>
+                        {map(onlyCountries, (country, index) => (
+                        <Item
+                          key={`preferred_${country.iso2}_${index}`}
+                          itemRef={(node) => {
+                            this.flags[`flag_no_${index}`] = node;
+                          }}
+                          selected={isSelected(country)}
+                          onClick={() => this.handleFlagItemClick(country)}
+                          name={country.name}
+                          iso2={country.iso2}
+                          dialCode={country.dialCode}
+                          localization={localization && localization[country.name]}
+                        />
+                      ))}
+                      </MenuList>
+                  </ClickAwayListener>
+                  </Paper>
+                </Popper>
               </>
             )}
         </InputAdornment>
