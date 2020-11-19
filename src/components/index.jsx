@@ -740,6 +740,8 @@ class MaterialUiPhoneNumber extends React.Component {
       value,
       // end placeholder props
       inputClass, error, InputProps,
+      // menu props
+      PopperProps,
       ...restProps
     } = this.props;
 
